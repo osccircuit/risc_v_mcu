@@ -1,17 +1,17 @@
 module top_riscv(
     input i_clk,
-    input i_rst,
+    input i_rst
+    );
 
-    input i_reg_write,
-    input [1:0] i_imm_src,
-    input i_alu_src,
-    input [2:0] i_alu_control,
-    input i_mem_write,
-    input [1:0] i_result_src,
-    input i_pc_src,
+    logic i_reg_write;
+    logic [1:0] i_imm_src;
+    logic i_alu_src;
+    logic [2:0] i_alu_control;
+    logic i_mem_write;
+    logic [1:0] i_result_src;
+    logic i_pc_src;
 
-    output o_zero
-);
+    logic o_zeror;
 
     wire o_pc;
     wire o_new_pc;
@@ -21,7 +21,7 @@ module top_riscv(
     wire [31:0] o_expand_data;
     wire [31:0] o_result;
     wire [31:0] o_read_data;
-    wire o_mux_d_m;
+    logic o_mux_d_m;
     wire o_mux_e_s;
     wire [31:0] o_pc_target;
     wire [31:0] o_mux_pc;
@@ -40,6 +40,20 @@ module top_riscv(
 
     assign o_mux_e_s = i_alu_src ? o_expand_data : rd_2;
     assign o_mux_pc = i_pc_src ? o_pc_target : o_new_pc;
+
+    block_controller u_b_c(
+        .i_zero     (o_zero),
+        .i_op       (instr[6:0]),
+        .i_funct3   (instr[14:12]),
+        .i_funct7   (instr[30]),
+        .o_pc_src   (i_pc_src),
+        .o_result_src    (i_result_src),
+        .o_mem_write    (i_mem_write),
+        .o_alu_src      (i_alu_src),
+        .o_imm_src      (i_imm_src),
+        .o_reg_write    (i_reg_write),
+        .o_alu_control  (i_alu_control)
+    );
 
     pc u_pc(
         .i_clk      (i_clk),
@@ -67,7 +81,7 @@ module top_riscv(
         .i_WD3      (o_mux_d_m),
         .i_WE3      (i_reg_write),
         .o_RD1      (rd_1),
-        .o_RD1      (rd_2)
+        .o_RD2      (rd_2)
     );
 
     expand_sign u_expand_sign(
