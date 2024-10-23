@@ -69,11 +69,20 @@ module block_controller(
             7'b0110011: begin
                 o_reg_write = 1;
                 o_imm_src = 2'b10;
-                o_alu_src = 2;
+                o_alu_src = 0;
                 o_mem_write = 0;
                 o_result_src = 0;
                 branch = 0;
-                alu_op = 2'b01;
+                alu_op = 2'b10;
+            end
+            7'b0010011: begin
+                o_reg_write = 1;
+                o_imm_src = 2'b10;
+                o_alu_src = 1;
+                o_mem_write = 0;
+                o_result_src = 0;
+                branch = 0;
+                alu_op = 2'b10;
             end
         endcase
     end
