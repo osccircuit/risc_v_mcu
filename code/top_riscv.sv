@@ -7,7 +7,7 @@ module top_riscv(
     input i_alu_src,
     input [2:0] i_alu_control,
     input i_mem_write,
-    input i_result_src,
+    input [1:0] i_result_src,
     input i_pc_src,
 
     output o_zero
@@ -26,8 +26,19 @@ module top_riscv(
     wire [31:0] o_pc_target;
     wire [31:0] o_mux_pc;
 
-    assign o_mux_d_m = i_result_src ? o_read_data : o_result;
-    assign o_mux_e_s = i_result_src ? o_expand_data : rd_2;
+    always_comb begin
+        if (i_result_src == 0) begin
+            o_mux_d_m = o_result;
+        end
+        if (i_result_src == 1) begin
+            o_mux_d_m = o_read_data;
+        end
+        if (i_result_src == 2) begin
+            o_mux_d_m = o_new_pc;
+        end
+    end
+
+    assign o_mux_e_s = i_alu_src ? o_expand_data : rd_2;
     assign o_mux_pc = i_pc_src ? o_pc_target : o_new_pc;
 
     pc u_pc(

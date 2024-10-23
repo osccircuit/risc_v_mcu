@@ -6,7 +6,7 @@ module block_controller(
     input i_funct7,
 
     output logic o_pc_src,
-    output logic o_result_src,
+    output logic [1:0] o_result_src,
     output logic o_mem_write,
     output logic o_alu_src,
     output logic [1:0] o_imm_src,
@@ -16,6 +16,8 @@ module block_controller(
 );
 
     logic branch;
+    logic o_mux_zero_branch;
+    logic jump;
     logic [1:0] alu_op;
 
     alu_decoder u_alu_decoder(
@@ -26,7 +28,8 @@ module block_controller(
         .o_alu_control   (o_alu_control)
     );
 
-    assign o_pc_src = i_zero & branch; 
+    assign o_mux_zero_branch = i_zero & branch; 
+    assign o_pc_src = jump | o_mux_zero_branch;
 
     always_comb begin
         case(i_op) 
@@ -38,6 +41,7 @@ module block_controller(
                 o_result_src = 1;
                 branch = 0;
                 alu_op = 2'b00;
+                jump = 0;
             end
             7'b0100011: begin
                 o_reg_write = 0;
@@ -47,6 +51,7 @@ module block_controller(
                 o_result_src = 0;
                 branch = 0;
                 alu_op = 2'b00;
+                jump = 0;
             end
             7'b0110011: begin
                 o_reg_write = 1;
@@ -56,6 +61,7 @@ module block_controller(
                 o_result_src = 1;
                 branch = 0;
                 alu_op = 2'b10;
+                jump = 0;
             end
             7'b1100011: begin
                 o_reg_write = 0;
@@ -65,6 +71,7 @@ module block_controller(
                 o_result_src = 0;
                 branch = 1;
                 alu_op = 2'b01;
+                jump = 0;
             end
             7'b0110011: begin
                 o_reg_write = 1;
@@ -74,6 +81,7 @@ module block_controller(
                 o_result_src = 0;
                 branch = 0;
                 alu_op = 2'b10;
+                jump = 0;
             end
             7'b0010011: begin
                 o_reg_write = 1;
@@ -83,6 +91,17 @@ module block_controller(
                 o_result_src = 0;
                 branch = 0;
                 alu_op = 2'b10;
+                jump = 0;
+            end
+            7'b0010011: begin
+                o_reg_write = 1;
+                o_imm_src = 2'b11;
+                o_alu_src = 1;
+                o_mem_write = 0;
+                o_result_src = 2'b10;
+                branch = 0;
+                alu_op = 2'b10;
+                jump = 1;
             end
         endcase
     end
