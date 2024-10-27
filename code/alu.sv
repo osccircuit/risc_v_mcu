@@ -4,8 +4,8 @@ module alu(
 
     input [2:0] i_control,
 
-    output [31:0] o_result,
-    output o_zero
+    output logic [31:0] o_result,
+    output logic o_zero
 );
 
     always_comb begin
@@ -23,10 +23,10 @@ module alu(
                 end
             end
             3'b010: begin
-                o_result = i_Src_a && i_Src_b;
+                o_result = i_Src_a & i_Src_b;
             end
             3'b011: begin
-                o_result = i_Src_a || i_Src_b;
+                o_result = i_Src_a | i_Src_b;
             end
             3'b100: begin
                 if (i_Src_a < i_Src_b) begin

@@ -58,7 +58,7 @@ module block_controller(
                 o_imm_src = 2'b00;
                 o_alu_src = 0;
                 o_mem_write = 0;
-                o_result_src = 1;
+                o_result_src = 0;
                 branch = 0;
                 alu_op = 2'b10;
                 jump = 0;

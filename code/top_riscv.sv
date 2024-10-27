@@ -13,16 +13,16 @@ module top_riscv(
 
     logic o_zeror;
 
-    wire o_pc;
-    wire o_new_pc;
+    wire [31:0] o_pc;
+    wire [31:0] o_new_pc;
     wire [31:0] instr;
     wire [31:0] rd_1;
     wire [31:0] rd_2;
     wire [31:0] o_expand_data;
     wire [31:0] o_result;
     wire [31:0] o_read_data;
-    logic o_mux_d_m;
-    wire o_mux_e_s;
+    logic [31:0] o_mux_d_m;
+    wire [31:0] o_mux_e_s;
     wire [31:0] o_pc_target;
     wire [31:0] o_mux_pc;
 
@@ -42,7 +42,7 @@ module top_riscv(
     assign o_mux_pc = i_pc_src ? o_pc_target : o_new_pc;
 
     block_controller u_b_c(
-        .i_zero     (o_zero),
+        .i_zero     (o_zeror),
         .i_op       (instr[6:0]),
         .i_funct3   (instr[14:12]),
         .i_funct7   (instr[30]),
@@ -100,6 +100,7 @@ module top_riscv(
         .i_Src_a        (rd_1),
         .i_Src_b        (o_mux_e_s),
         .i_control      (i_alu_control),
+        .o_zero         (o_zeror),
         .o_result       (o_result)
     );
 

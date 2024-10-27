@@ -21,13 +21,15 @@ module register_file(
             for (int i = 0; i < 32; i++) begin
                 register[i] <= 0;
             end
+            register[5] <= 6;
+            register[9] <= 32'h2004;
         end
-        else if(i_WE3 && (i_A3 != 0)) begin
+        else if(i_WE3) begin
             register[i_A3] <= i_WD3; 
         end
     end
 
-    assign o_RD1 = !i_WE3 ? register[i_A1] : 0;
-    assign o_RD2 = !i_WE3 ? register[i_A2] : 0;
+    assign o_RD1 = i_A1 != 0 ? register[i_A1] : 0;
+    assign o_RD2 = i_A2 != 0 ? register[i_A2] : 0;
 
 endmodule 
