@@ -6,7 +6,7 @@ module command_memory(
     logic [31:0] mem [64:0];
 
     initial begin
-        $readmemh("../tests/env/command.mem", mem);
+        $readmemh("../tests/env/asm/programm.mem", mem);
     end
 
     assign o_rd = mem[i_addr[31:2]];
