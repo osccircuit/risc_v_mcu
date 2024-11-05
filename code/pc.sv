@@ -16,5 +16,6 @@ module pc (
             o_pc <= i_pc_next;
         end
     end
+
 endmodule
 

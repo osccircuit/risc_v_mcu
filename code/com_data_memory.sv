@@ -1,4 +1,4 @@
-module data_memory(
+module com_data_memory(
     input i_clk,
     input i_rst,
 
