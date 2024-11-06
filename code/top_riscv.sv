@@ -27,12 +27,11 @@ module top_riscv(
     logic reg_write;
     logic alu_control;
     logic zeror;
-    logic result
     logic [1:0] result_src;
     logic [1:0] alu_src_a;
     logic [1:0] alu_src_b;
 
-    assign adr_mux = adr_src : mux_src ? cur_pc;
+    assign adr_mux = adr_src ? mux_src : cur_pc;
 
     always_comb begin
         if (result_src == 0) begin
@@ -42,7 +41,7 @@ module top_riscv(
             mux_src = temp_data;
         end
         if (result_src == 2) begin
-            mux_src = o_result;
+            mux_src = result;
         end
     end
 
@@ -66,7 +65,7 @@ module top_riscv(
             mux_src_a = old_pc;
         end
         if (alu_src_a == 2) begin
-            mux_src_a = temp_data2;
+            mux_src_a = cur_rd1;
         end
     end
 
@@ -107,7 +106,7 @@ module top_riscv(
         .i_instr            (read_data),
         .i_pc               (cur_pc),
         .i_enable           (ir_write),
-        .o_instr            (cur_instr)
+        .o_instr            (cur_instr),
         .o_old_pc           (old_pc)
     );
 
