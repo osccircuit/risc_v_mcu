@@ -13,6 +13,8 @@ module top_riscv(
     logic [31:0] temp_data;
     logic [31:0] cur_rd1;
     logic [31:0] cur_rd2;
+    logic [31:0] rd_1;
+    logic [31:0] rd_2;
     logic [31:0] read_data;
     logic [31:0] expand_data;
     logic [31:0] cur_pc;
@@ -25,11 +27,12 @@ module top_riscv(
     logic adr_src;
     logic mem_write;
     logic reg_write;
-    logic alu_control;
+    logic [2:0] alu_control;
     logic zeror;
     logic [1:0] result_src;
     logic [1:0] alu_src_a;
     logic [1:0] alu_src_b;
+    logic [1:0] imm_src;
 
     assign adr_mux = adr_src ? mux_src : cur_pc;
 
@@ -69,19 +72,24 @@ module top_riscv(
         end
     end
 
-    /* block_controller u_b_c( */
-    /*     .i_zero     (o_zeror), */
-    /*     .i_op       (instr[6:0]), */
-    /*     .i_funct3   (instr[14:12]), */
-    /*     .i_funct7   (instr[30]), */
-    /*     .o_pc_src   (i_pc_src), */
-    /*     .o_result_src    (i_result_src), */
-    /*     .o_mem_write    (i_mem_write), */
-    /*     .o_alu_src      (i_alu_src), */
-    /*     .o_imm_src      (i_imm_src), */
-    /*     .o_reg_write    (i_reg_write), */
-    /*     .o_alu_control  (i_alu_control) */
-    /* ); */
+    block_controller u_b_c(
+        .i_clk              (i_clk),
+        .i_rst              (i_rst),
+        .i_zero             (zeror),
+        .i_op               (cur_instr[6:0]),
+        .i_funct3           (cur_instr[14:12]),
+        .i_funct7           (cur_instr[30]),
+        .o_addr_src         (adr_src),
+        .o_ir_write         (ir_write),
+        .o_alu_src_a        (alu_src_a),
+        .o_alu_src_b        (alu_src_b),
+        .o_mem_write        (mem_write),
+        .o_pc_write         (pc_write),
+        .o_alu_control      (alu_control),
+        .o_result_src       (result_src),
+        .o_imm_src          (imm_src),
+        .o_reg_write        (reg_write)
+    );
 
     pc u_pc(
         .i_clk      (i_clk),
@@ -140,7 +148,7 @@ module top_riscv(
 
     expand_sign u_expand_sign(
         .i_data               (cur_instr[31:7]),
-        .i_imm_src            (i_imm_src),
+        .i_imm_src            (imm_src),
         .o_expand_data        (expand_data)
     );
 

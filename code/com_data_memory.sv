@@ -1,3 +1,5 @@
+`timescale 1ns/1ns
+
 module com_data_memory(
     input i_clk,
     input i_rst,
@@ -11,6 +13,12 @@ module com_data_memory(
 );
 
     logic [31:0] memory_data [2999:0];
+
+    initial begin
+        #1ns;
+        @(posedge i_rst)
+        $readmemh("../tests/env/asm/programm.mem", memory_data);
+    end
 
     always_ff @(posedge i_clk or negedge i_rst) begin
         if(!i_rst) begin
