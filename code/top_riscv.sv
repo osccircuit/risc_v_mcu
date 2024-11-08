@@ -28,7 +28,8 @@ module top_riscv(
     logic mem_write;
     logic reg_write;
     logic [2:0] alu_control;
-    logic zeror;
+    logic zerof;
+    logic not_zerof;
     logic [1:0] result_src;
     logic [1:0] alu_src_a;
     logic [1:0] alu_src_b;
@@ -75,7 +76,8 @@ module top_riscv(
     block_controller u_b_c(
         .i_clk              (i_clk),
         .i_rst              (i_rst),
-        .i_zero             (zeror),
+        .i_zero             (zerof),
+        .i_not_zero         (not_zerof),
         .i_op               (cur_instr[6:0]),
         .i_funct3           (cur_instr[14:12]),
         .i_funct7           (cur_instr[30]),
@@ -156,7 +158,8 @@ module top_riscv(
         .i_Src_a        (mux_src_a),
         .i_Src_b        (mux_src_b),
         .i_control      (alu_control),
-        .o_zero         (zeror),
+        .o_zero         (zerof),
+        .o_not_zero     (not_zerof),
         .o_result       (result)
     );
 

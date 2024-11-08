@@ -18,7 +18,7 @@ module tb();
     end
 
     initial begin
-        #500ns;
+        #800ns;
         $stop();
     end
 
